@@ -30,7 +30,7 @@
     [(= w 1) z]
     [else (* (* z z) (pow z (- w 2)))]))
 
-; EJERCICIO 2: Dado una lista no vac´ıa de n´umeros, regresar el promedio de esta
+; EJERCICIO 2: Dado una lista no vacía de números, regresar el promedio de esta
 
 (define (average a-lst)
   (if (empty? a-lst)
@@ -45,6 +45,13 @@
   (cond
     [(or (empty? a-lst) (empty? b-lst)) '()]
     [else (cons (concat-head a-lst b-lst)(zip (cdr a-lst)(cdr b-lst)))]))
+
+; EJERCICIO 5: reduce - Dada una función de aridad 2 y una lista de n elementos, regresar la evaluación de la función encadenada de todos los elementos
+
+(define (reduce fn lst)
+  (if (empty? (cdr lst))
+    (car lst)
+    (fn (car lst) (reduce fn (cdr lst)))))
 
 ; ========== TESTS ==========
 
@@ -69,3 +76,8 @@
 (test (zip '() '(4 5 6)) '())
 (test (zip '(8 9) '(3 2 1 4)) '((8 3) (9 2)))
 (test (zip '(8 9 1 2) '(3 4)) '((8 3) (9 4)))
+
+; Tests Ejercicio 5
+
+(test (reduce + '(1 2 3 4 5 6 7 8 9 10)) 55)
+(test (reduce zip '((1 2 3) (4 5 6) (7 8 9))) '((1 (4 7)) (2 (5 8)) (3 (6 9))))
