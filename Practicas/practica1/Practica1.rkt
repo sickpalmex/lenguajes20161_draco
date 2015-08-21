@@ -53,13 +53,20 @@
     (car lst)
     (fn (car lst) (reduce fn (cdr lst)))))
 
-; EJERCICIO 6:  Dadas dos listas, regresa la concatenación de la primera con la segunda
+; EJERCICIO 6: Dadas dos listas, regresa la concatenación de la primera con la segunda
 
 (define (mconcat a-lst b-lst)
   (cond
     [(empty? a-lst) b-lst]
     [(empty? b-lst) a-lst]
     [else (cons (car a-lst) (mconcat (cdr  a-lst) b-lst))]))
+
+; EJERCICIO 7: Dada una función de aridad 1 y una lista, regresa una lista con la aplicación de la función a cada uno de los elementos de la lista original
+
+(define (mmap fn lst)
+  (if (empty? (cdr lst))
+    (list (fn (car lst)))
+    (cons (fn (car lst)) (mmap fn (cdr lst)))))
 
 ; ========== TESTS ==========
 
@@ -95,3 +102,9 @@
 (test (mconcat '(1 2 3) '(4 5 6)) '(1 2 3 4 5 6))
 (test (mconcat '() '(4 5 6)) '(4 5 6))
 (test (mconcat '(1 2 3) '()) '(1 2 3))
+
+; Ejercicio 7
+
+(test (mmap add1 '(1 2 3 4)) '(2 3 4 5))
+(test (mmap car '((1 2 3) (4 5 6) (7 8 9))) '(1 4 7))
+(test (mmap cdr '((1 2 3) (4 5 6) (7 8 9))) '((2 3) (5 6) (8 9)))
