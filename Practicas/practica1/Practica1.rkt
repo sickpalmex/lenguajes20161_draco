@@ -53,9 +53,17 @@
     (car lst)
     (fn (car lst) (reduce fn (cdr lst)))))
 
+; EJERCICIO 6:  Dadas dos listas, regresa la concatenación de la primera con la segunda
+
+(define (mconcat a-lst b-lst)
+  (cond
+    [(empty? a-lst) b-lst]
+    [(empty? b-lst) a-lst]
+    [else (cons (car a-lst) (mconcat (cdr  a-lst) b-lst))]))
+
 ; ========== TESTS ==========
 
-; Tests Ejercicio 1
+; Ejercicio 1
 
 (test (pow 2000 0) 1)
 (test (pow 2000 1) 2000)
@@ -63,13 +71,13 @@
 (test (pow 8 6) 262144)
 (test (pow 10 5) 100000)
 
-; Tests Ejercicio 2
+; Ejercicio 2
 
 (test (average '(5)) 5)
 (test (average '(3 2 6 2 1 7 2 1)) 3)
 (test (average '(10 7 13)) 10)
 
-; Tests Ejercicio 4
+; Ejercicio 4
 
 (test (zip '(1 2) '(3 4)) '((1 3) (2 4)))
 (test (zip '(1 2 3) '()) '())
@@ -77,7 +85,13 @@
 (test (zip '(8 9) '(3 2 1 4)) '((8 3) (9 2)))
 (test (zip '(8 9 1 2) '(3 4)) '((8 3) (9 4)))
 
-; Tests Ejercicio 5
+; Ejercicio 5
 
 (test (reduce + '(1 2 3 4 5 6 7 8 9 10)) 55)
 (test (reduce zip '((1 2 3) (4 5 6) (7 8 9))) '((1 (4 7)) (2 (5 8)) (3 (6 9))))
+
+; Ejercicio 6
+
+(test (mconcat '(1 2 3) '(4 5 6)) '(1 2 3 4 5 6))
+(test (mconcat '() '(4 5 6)) '(4 5 6))
+(test (mconcat '(1 2 3) '()) '(1 2 3))
