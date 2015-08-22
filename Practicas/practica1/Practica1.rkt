@@ -68,13 +68,26 @@
     (list (fn (car lst)))
     (cons (fn (car lst)) (mmap fn (cdr lst)))))
 
-; EJERCICIO 8: Dado un predicado de un argumento y una lista, regresa la lista original sin los elementos que al aplicar el predicado, regresa falso.
+; EJERCICIO 8:
+
+; EJERCICIO 9: Dado un predicado de un argumento y una lista, regresa la lista original sin los elementos que al aplicar el predicado, regresa falso.
 
 (define (any? pred lst)
   (cond
     [(empty? lst) (pred lst)]
     [(pred (car lst)) true]
     [else (any? pred (cdr lst))]))
+
+; EJERCICIO 10: Dado un predicado de un argumento y una lista, regresa solamente #t cuando cada uno de los elementos de la lista regresa #t para el predicado dado. En caso contrario regresa #f
+
+(define (every? pred lst)
+  (cond
+    [(empty? lst)(pred lst)]
+    [(pred (car lst))
+     (if (empty? (cdr lst))
+       (pred (car lst))
+       (every? pred (cdr lst)))]
+    [else false]))
 
 ; ========== TESTS ==========
 
@@ -117,8 +130,15 @@
 (test (mmap car '((1 2 3) (4 5 6) (7 8 9))) '(1 4 7))
 (test (mmap cdr '((1 2 3) (4 5 6) (7 8 9))) '((2 3) (5 6) (8 9)))
 
-; Ejercicio 8
+; Ejercicio 9
 
 (test (any? number? '()) #f)
 (test (any? number? '(a b c d 1)) #t)
 (test (any? symbol? '(1 2 3 4)) #f)
+
+; Ejercicio 10
+
+(test (every? number? '()) #f)
+(test (every? number? '(1 2 3)) #t)
+(test (every? number? '(1 2 3 a)) #f)
+(test (every? symbol? '(1 2 3 a)) #f)
