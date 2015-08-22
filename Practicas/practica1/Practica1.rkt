@@ -68,7 +68,13 @@
     (list (fn (car lst)))
     (cons (fn (car lst)) (mmap fn (cdr lst)))))
 
-; EJERCICIO 8:
+; EJERCICIO 8: Dado un predicado de un argumento y una lista, regresa la lista original sin los elementos que al aplicar el predicado regresa falso
+
+(define (mfilter pred lst)
+  (cond
+    [(empty? lst) lst]
+    [(pred (car lst)) (cons (car lst) (mfilter pred (cdr lst)))]
+    [else (mfilter pred (cdr lst))]))
 
 ; EJERCICIO 9: Dado un predicado de un argumento y una lista, regresa la lista original sin los elementos que al aplicar el predicado, regresa falso.
 
@@ -129,6 +135,12 @@
 (test (mmap add1 '(1 2 3 4)) '(2 3 4 5))
 (test (mmap car '((1 2 3) (4 5 6) (7 8 9))) '(1 4 7))
 (test (mmap cdr '((1 2 3) (4 5 6) (7 8 9))) '((2 3) (5 6) (8 9)))
+
+; Ejercicio 8
+
+(mfilter (lambda (x) (not (zero? x))) '(2 0 1 4 0))
+(mfilter (lambda (l) (not (empty? l))) '((1 4 2) () (2 4) ()))
+(mfilter (lambda (n) (= (modulo n 2) 0)) '(1 2 3 4 5 6))
 
 ; Ejercicio 9
 
