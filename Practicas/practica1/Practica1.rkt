@@ -20,6 +20,22 @@
     '()
     (list (first a-lst)(first b-lst))))
 
+; Dado un número entero, devuelve true si es primo o false si no lo es
+(define (isPrime n)
+  (if (= 2 n)
+    true
+    (let checkMod ([x (sub1 n)])
+      (cond
+        [(= 1 x) true]
+        [(zero? (modulo n x)) false]
+        [else (and true (checkMod (sub1 x)))]))))
+
+; Dado un elemento y una lista, inserta el elemento al final de la lista
+(define (insertaFinal n lst)
+  (if (empty? lst)
+    (list n)
+    (cons (car lst) (insertaFinal n (cdr lst)))))
+
 ; ========== PRACTICA 1 ==========
 
 ; EJERCICIO 1: Toma dos números enteros positivos z y w y regresa el numero que se obtiene de elevar el numero z a la potencia w.
@@ -38,6 +54,12 @@
     (/ (sum-lst a-lst) (long a-lst))))
 
 ; EJERCICIO 3: Dado un numero entero positivo, regresa una lista con los números primos contenidos entre 2 y el numero entero dado
+
+(define (primes n)
+  (cond
+    [(= 1 n) '()]
+    [(isPrime n) (insertaFinal n (primes (sub1 n)))]
+    [else (primes (sub1 n))]))
 
 ; EJERCICIO 4: zip
 
@@ -76,7 +98,7 @@
     [(pred (car lst)) (cons (car lst) (mfilter pred (cdr lst)))]
     [else (mfilter pred (cdr lst))]))
 
-; EJERCICIO 9: Dado un predicado de un argumento y una lista, regresa la lista original sin los elementos que al aplicar el predicado, regresa falso.
+; EJERCICIO 9: Dado un predicado de un argumento y una lista regresa #t cuando por lo menos un elemento de la lista regresa #t con el predicado dado
 
 (define (any? pred lst)
   (cond
@@ -95,6 +117,18 @@
        (every? pred (cdr lst)))]
     [else false]))
 
+; EJERCICIO 11: Dada una lista, regresa otra como el conjunto potencia de la original
+
+(define (mpowerset lst)
+  (if (empty? lst)
+    (list '())
+    (cons (list (first lst)) (mpowerset (rest lst)))))
+
+(mpowerset '())
+(mpowerset '(1))
+(mpowerset '(1 2))
+(mpowerset '(1 2 3))
+
 ; ========== TESTS ==========
 
 ; Ejercicio 1
@@ -110,6 +144,15 @@
 (test (average '(5)) 5)
 (test (average '(3 2 6 2 1 7 2 1)) 3)
 (test (average '(10 7 13)) 10)
+(test (average '(5 3 10)) 6)
+(test (average '(0 2 7 3 2)) 2.8)
+
+; Ejercicio 3
+(test (primes 30) '(2 3 5 7 11 13 17 19 23 29))
+(test (primes 11) '(2 3 5 7 11))
+(test (primes 1) '())
+(test (primes 41) '(2 3 5 7 11 13 17 19 23 29 31 37 41))
+(test (primes 31) '(2 3 5 7 11 13 17 19 23 29 31))
 
 ; Ejercicio 4
 
@@ -123,24 +166,33 @@
 
 (test (reduce + '(1 2 3 4 5 6 7 8 9 10)) 55)
 (test (reduce zip '((1 2 3) (4 5 6) (7 8 9))) '((1 (4 7)) (2 (5 8)) (3 (6 9))))
+(test (reduce pow '(3 2 1)) 9)
+(test (reduce mconcat '((1 2 3) (4 5 6) () (4 5 6) (1 2 3) ())) '(1 2 3 4 5 6 4 5 6 1 2 3))
+(test (reduce list '(1 2 3 4 5 6)) '(1 (2 (3 (4 (5 6))))))
 
 ; Ejercicio 6
 
 (test (mconcat '(1 2 3) '(4 5 6)) '(1 2 3 4 5 6))
 (test (mconcat '() '(4 5 6)) '(4 5 6))
 (test (mconcat '(1 2 3) '()) '(1 2 3))
+(test (mconcat '(1 6 2 5) '(3 4 4 3)) '(1 6 2 5 3 4 4 3))
+(test (mconcat '((1 2 3) (4 5 6)) '((7 8 9) (10 11 12))) '((1 2 3) (4 5 6) (7 8 9) (10 11 12)))
 
 ; Ejercicio 7
 
 (test (mmap add1 '(1 2 3 4)) '(2 3 4 5))
 (test (mmap car '((1 2 3) (4 5 6) (7 8 9))) '(1 4 7))
 (test (mmap cdr '((1 2 3) (4 5 6) (7 8 9))) '((2 3) (5 6) (8 9)))
+(test (mmap average '((1 2 3) (4 5 6) (7 8 9))) '(2 5 8))
+(test (mmap primes '(1 2 3 4 5 6 7 8 9)) '(() (2) (2 3) (2 3) (2 3 5) (2 3 5) (2 3 5 7) (2 3 5 7) (2 3 5 7)))
 
 ; Ejercicio 8
 
-(mfilter (lambda (x) (not (zero? x))) '(2 0 1 4 0))
-(mfilter (lambda (l) (not (empty? l))) '((1 4 2) () (2 4) ()))
-(mfilter (lambda (n) (= (modulo n 2) 0)) '(1 2 3 4 5 6))
+(test (mfilter (lambda (x) (not (zero? x))) '(2 0 1 4 0)) '(2 1 4))
+(test (mfilter (lambda (l) (not (empty? l))) '((1 4 2) () (2 4) ())) '((1 4 2) (2 4)))
+(test (mfilter (lambda (n) (= (modulo n 2) 0)) '(1 2 3 4 5 6)) '(2 4 6))
+(test (mfilter (lambda (x) (isPrime x)) '(2 3 4 5 6 7 8 9)) '(2 3 5 7))
+(test (mfilter (lambda (x) (number? x)) '(() a b c d 1 1 2 3 4)) '(1 1 2 3 4))
 
 ; Ejercicio 9
 
