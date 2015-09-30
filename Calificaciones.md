@@ -6,6 +6,24 @@
 
 En tu caso base de every? esta erroneo debes regresar #t y no (pred lst) que
 es erroneo.
-Tu implementacion de mpowerset es erronea.
+Tu implementación de mpowerset es erronea.
 
-**Calificacion: 9**
+**Calificación: 9**
+
+
+### Practica 2
+
+No subiste nada :(.
+
+**Calificación: 0**
+
+### Practica 3
+
+**Calificación: 0**
+
+
+## Tareas
+
+### Tarea 1
+
+**Calificación: 0**
