@@ -27,3 +27,7 @@ No subiste nada :(.
 ### Tarea 1
 
 **Calificación: 0**
+
+### Tarea 2
+
+**Calificación: 0**
